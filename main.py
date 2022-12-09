@@ -1,24 +1,11 @@
-import argparse
+import fire
 
-class habit:
-    def __init__(self, name, periodicity):
-        self.habit_name = name
-        self.periodicity = periodicity
-
-def say_hello(args):
-    if args.name:
-        print(f'Hello {args.name}!')
-
-    else:
-        print(f'Hallo Stranger')
+def hello(name):
+    """
+    This is a simple program that greets NAME for a total of NUMBER times.
+    """
+    print(f"Hello {name}")
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--name')
-    args = parser.parse_args()
-    say_hello(args)
-
-
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    fire.Fire()  # Call main function
