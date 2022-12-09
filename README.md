@@ -4,12 +4,19 @@
 fire: pip install fire
 ## Installation Instructions
 
-# User Interface
-## User Flow
-### Main
-### Create
-### Edit
-### Delete
+```
+git clone https://github.com/KonradKlein91/habit_tracker_oofp.git
+```
+```
+cd habit_tracker_oofp
+```
+```
+pip3 install .r requirements.txt
+```
+## Functionalities
+```
+python main.py
+```
 
 # UML Class Diagram
 
