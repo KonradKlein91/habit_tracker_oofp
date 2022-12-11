@@ -1,4 +1,5 @@
 import sqlite3
+from main import Habit
 
 # create database or if it does not exist, connect to it
 conn = sqlite3.connect('habit_database.db')
@@ -13,9 +14,9 @@ c.execute("""CREATE TABLE IF NOT EXISTS habit (
             )""")
 
 
-def insert_habit(habit_name):
+def insert_habit(habit: Habit):
     with conn:
-        c.execute("INSERT INTO habit VALUES (NULL, :habit_name)", {'habit_name': habit_name})
+        c.execute("INSERT INTO habit VALUES (NULL, :name)", {'name': habit.name})
 
 
 def get_habits():
