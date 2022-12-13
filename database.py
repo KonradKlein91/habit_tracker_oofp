@@ -1,5 +1,10 @@
 import sqlite3
-from main import Habit
+from classes import Habit
+
+# rules for functional programming or "pure functions":
+#   1) same input gives same output
+#   2) no side effects e.g. no print statements, but returns instead
+#   3) no global variables
 
 # create database or if it does not exist, connect to it
 conn = sqlite3.connect('habit_database.db')
@@ -10,28 +15,22 @@ c = conn.cursor()
 # create table
 c.execute("""CREATE TABLE IF NOT EXISTS habit (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            habit_name text
+            name text
             )""")
 
 
-def insert_habit(habit: Habit):
+def insert(habit: Habit):
     with conn:
         c.execute("INSERT INTO habit VALUES (NULL, :name)", {'name': habit.name})
 
 
-def get_habits():
+def get():
     c.execute("SELECT * FROM habit")
-    return print(c.fetchall())
+    return c.fetchall()
 
-
-# insert some sample data
-# c.execute("INSERT INTO habit VALUES (2, 'Cooking')")
-c.execute("SELECT * FROM habit")
-
-# print(c.fetchone())
 
 # commit the current transaction
 conn.commit()
 
 # close the connection
-# conn.close()
+#conn.close()
