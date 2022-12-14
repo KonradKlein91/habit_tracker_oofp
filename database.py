@@ -17,7 +17,8 @@ def create_db():
     try:
         c.execute("""CREATE TABLE IF NOT EXISTS habit (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name text
+                    name text,
+                    created datetime
                     )""")
     except sqlite3.Error as e:
         print(e)
@@ -25,7 +26,7 @@ def create_db():
 # inserts a habit into the database
 def insert(habit: Habit):
     with conn:
-        c.execute("INSERT INTO habit VALUES (NULL, :name)", {'name': habit.name})
+        c.execute("INSERT INTO habit VALUES (NULL, :name, :created)", {'name': habit.name, 'created': habit.created})
         conn.commit()
 
 # returns a list of all habits in the database
