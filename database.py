@@ -12,32 +12,36 @@ conn = sqlite3.connect('habit_database.db')
 # create cursor
 c = conn.cursor()
 
+
 # creates the database table
 def create_db():
-    try:
+    with conn:
         c.execute("""CREATE TABLE IF NOT EXISTS habit (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name text,
-                    created datetime
-                    )""")
-    except sqlite3.Error as e:
-        print(e)
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name text,
+            created datetime,
+            periodicity integer
+            )""")
+
 
 # inserts a habit into the database
 def insert(habit: Habit):
     with conn:
-        c.execute("INSERT INTO habit VALUES (NULL, :name, :created)", {'name': habit.name, 'created': habit.created})
-        conn.commit()
+        c.execute("INSERT INTO habit VALUES (NULL, :name, :created, :periodicity)",
+                  {'name': habit.name,
+                   'created': habit.created,
+                   'periodicity': habit.periodicity}
+                  )
+
 
 # returns a list of all habits in the database
 def get():
-    c.execute("SELECT * FROM habit")
-    conn.commit()
-    return c.fetchall()
+    with conn:
+        c.execute("SELECT * FROM habit")
+        return c.fetchall()
+
 
 # drops the database table and closes the connection
 def clear():
-    c.execute("DROP TABLE habit")
-    conn.commit()
-    conn.close()
-
+    with conn:
+        c.execute("DROP TABLE habit")

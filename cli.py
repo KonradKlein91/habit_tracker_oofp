@@ -1,6 +1,6 @@
 import click
-from classes import Habit
 import database as db
+from classes import Habit
 from tabulate import tabulate
 
 
@@ -11,18 +11,19 @@ def cli():
 
 @cli.command()
 @click.option("--name", prompt="give the name of the habit", help="habit name")
-def create(name) -> None:
+@click.option("--periodicity", prompt="give the periodicity of the habit", help="interval in days")
+def create(name, periodicity) -> None:
     """create a new habit"""
-    habit = Habit(name)
+    habit = Habit(name, periodicity)
     db.insert(habit)
-    click.echo(f'Habit {name} created')
+    click.echo(f'Habit {name} with periodicity {periodicity} created')
 
 
 @cli.command()
 def get_habit_list() -> None:
     """get a list of all habits in the database and print it"""
     click.echo(f'This is the list of all habits')
-    print(tabulate(db.get(), headers=['id', 'name'], tablefmt='psql'))
+    print(tabulate(db.get(), headers=['id', 'name', 'created', 'periodicity'], tablefmt='psql'))
 
 
 @cli.command()
