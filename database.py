@@ -2,6 +2,9 @@ import sqlite3
 
 
 def create_db():
+    """
+    This function creates the database and the habits table
+    """
     # Connect to the database
     conn = sqlite3.connect('database.db')
 
@@ -23,26 +26,14 @@ def create_db():
 
 
 def clear_database():
+    """
+    This function clears the database by deleting all rows in the habits table
+    """
     # Connect to the database
     conn = sqlite3.connect('database.db')
 
     # Clear the database
-    conn.execute('''DROP TABLE habits''')
-
-    # Commit the changes to the database
-    conn.commit()
-
-    # Close the connection to the database
-    conn.close()
-
-
-def create_habit(created, name, frequency):
-    # Connect to the database
-    conn = sqlite3.connect('database.db')
-
-    # Add the habit to the database
-    conn.execute('''INSERT INTO habits (created, name, frequency) VALUES (?, ?, ?)''',
-                 (created, name, frequency))
+    conn.execute('''DELETE FROM habits''')
 
     # Commit the changes to the database
     conn.commit()
@@ -52,6 +43,9 @@ def create_habit(created, name, frequency):
 
 
 def get_habits():
+    """
+    This function returns a list of all habits in the database
+    """
     # Connect to the database
     conn = sqlite3.connect('database.db')
 
