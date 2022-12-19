@@ -2,6 +2,7 @@ import click
 import database as db
 import classes as cl
 import os
+import pandas as pd
 from tabulate import tabulate
 
 
@@ -32,15 +33,23 @@ def create_habit(name, frequency):
 @click.option("--name", prompt="What is the name of the habit you want to mark as completed?", help="habit name")
 def complete(name):
     """Mark a habit as completed"""
+    # get all habits from the database
     habits = db.get_habits()
-    print(habits)
-    for h in habits:
-        if h[0] == name:
-            habit = cl.Habit(h[0], h[1])
-            habit.complete()
-            click.echo(f'Habit "{name}" marked as completed')
-            return
-    click.echo(f'Habit "{name}" not found')
+
+    # setup a df to find the habit
+    df = pd.DataFrame(habits, columns=['id', 'created', 'name', 'frequency', 'streak', 'last_completed'])
+
+    # find the habit
+    selected_habit = df.loc[df['name'] == name]
+
+    # TODO add error handling if the habit is not found
+    # TODO add case handling when two habits have the same name
+    #  -> ask the user to select the habit or prevent the user from creating two habits with the same name
+    # iterate over the habit and complete it
+    for index, row in selected_habit.iterrows():
+        habit = cl.Habit(row['name'], row['frequency'])
+        cl.Habit.complete(habit)
+        click.echo(f'Habit "{name}" marked as completed')
 
 
 @cli.command()

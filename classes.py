@@ -32,6 +32,28 @@ class Habit:
         else:
             self.streak = 1
 
+        # Connect to the database
+        conn = sqlite3.connect('database.db')
+
+        # Add the habit to the database
+        conn.execute(
+            f'''UPDATE habits SET 
+                created = '{self.created}', 
+                name = '{self.name}', 
+                frequency = {self.frequency}, 
+                streak = {self.streak}, 
+                last_completed = '{self.last_completed}' 
+                
+                WHERE name = '{self.name}';
+            ''')
+
+        # Commit the changes to the database
+        conn.commit()
+
+        # Close the connection to the database
+        conn.close()
+
+
     @classmethod
     def create(cls, name, frequency):
         """
