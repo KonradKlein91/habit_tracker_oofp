@@ -16,7 +16,7 @@ class Habit:
         self.name = name
         self.frequency = frequency
         self.streak = 0
-        self.last_completed = None
+        self.last_completed = 0
 
     def complete(self):
         """
@@ -27,10 +27,13 @@ class Habit:
         self.last_completed = datetime.datetime.now()
         if self.last_completed - self.last_completed.replace(hour=0, minute=0, second=0,
                                                              microsecond=0) <= datetime.timedelta(
-                                                                                days=self.frequency - 1):
+            days=self.frequency - 1):
             self.streak += 1
         else:
             self.streak = 1
+
+        # change date format to match the database
+        self.last_completed = self.last_completed.strftime('%Y-%m-%d %H:%M:%S')
 
         # Connect to the database
         conn = sqlite3.connect('database.db')
@@ -38,12 +41,8 @@ class Habit:
         # Add the habit to the database
         conn.execute(
             f'''UPDATE habits SET 
-                created = '{self.created}', 
-                name = '{self.name}', 
-                frequency = {self.frequency}, 
                 streak = {self.streak}, 
                 last_completed = '{self.last_completed}' 
-                
                 WHERE name = '{self.name}';
             ''')
 
@@ -52,7 +51,6 @@ class Habit:
 
         # Close the connection to the database
         conn.close()
-
 
     @classmethod
     def create(cls, name, frequency):

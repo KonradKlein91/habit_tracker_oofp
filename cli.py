@@ -12,13 +12,18 @@ def cli():
 
 
 @cli.command()
-@click.option("--name", prompt="give the name of the habit", help="habit name")
-@click.option("--frequency", prompt="give the periodicity of the habit in number of days", help="interval in days")
+@click.option("--name", required=True, prompt="give the name of the habit", help="habit name")
+@click.option("--frequency", required=True, type=int, prompt="give the periodicity of the habit in number of days", help="interval in days")
 def create_habit(name, frequency):
     """create a new habit"""
 
     # clears the terminal screen
     os.system('cls' if os.name == 'nt' else 'clear')
+
+    # check if the frequency is valid
+    if frequency <= 0:
+        print("The frequency must be a positive integer!")
+        return
 
     # creates a new habit object
     cl.Habit.create(name, frequency)
@@ -33,6 +38,9 @@ def create_habit(name, frequency):
 @click.option("--name", prompt="What is the name of the habit you want to mark as completed?", help="habit name")
 def complete(name):
     """Mark a habit as completed"""
+    # clears the terminal screen
+    os.system('cls' if os.name == 'nt' else 'clear')
+
     # get all habits from the database
     habits = db.get_habits()
 
@@ -49,7 +57,14 @@ def complete(name):
     for index, row in selected_habit.iterrows():
         habit = cl.Habit(row['name'], row['frequency'])
         cl.Habit.complete(habit)
-        click.echo(f'Habit "{name}" marked as completed')
+
+        # prints a message to the user
+        click.echo(f"--------------------------------------------------------------------------------")
+        click.echo('Habit ' + '\033[31m' + f'{name}' + '\033[39m'
+                   + ' has been marked as completed. You are currently on a '
+                   + 'streak of ' + '\033[31m' + f'{habit.streak}' + '\033[39m' + ' period(s).'
+                   )
+        click.echo(f"--------------------------------------------------------------------------------")
 
 
 @cli.command()

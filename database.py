@@ -15,7 +15,7 @@ def create_db():
              name TEXT NOT NULL,
              frequency INTEGER,
              streak INTEGER,
-             last_completed DATETIME
+             last_completed SmallDateTime
              );''')
 
     # Commit the changes to the database
@@ -59,3 +59,6 @@ def get_habits():
     conn.close()
 
     return habits
+
+# TODO add a function to get the longest streak
+# TODO add a function to get all habits with ongoing streaks
